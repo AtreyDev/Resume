@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atrey.exe // Cyberpunk Gamified Resume</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+
+        :root {
+            --neon-cyan: #00f3ff;
+            --neon-pink: #ff007f;
+            --neon-purple: #9d4edd;
+            --neon-green: #39ff14;
+            --bg-dark: #05050d;
+            --panel-bg: rgba(10, 10, 25, 0.85);
+            --border-glow: 0 0 15px rgba(0, 243, 255, 0.4);
+            --pink-glow: 0 0 15px rgba(255, 0, 127, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-dark);
+            background-image:
+                radial-gradient(circle at 50% 50%, #120e2e 0%, #05050d 100%),
+                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 100%, 100% 4px;
+            color: #fff;
+            font-family: 'Share Tech Mono', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+            z-index: 5;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin: 0 0 5px 0;
+            letter-spacing: 4px;
+            color: #fff;
+            text-shadow:
+                0 0 5px #fff,
+                0 0 10px var(--neon-cyan),
+                0 0 20px var(--neon-cyan),
+                0 0 40px var(--neon-cyan);
+            animation: glitch 3s infinite alternate;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: var(--neon-pink);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px rgba(255, 0, 127, 0.6);
+            margin: 0;
+        }
+
+        #game-container {
+            position: relative;
+            box-shadow: 0 0 35px rgba(0, 243, 255, 0.25), inset 0 0 15px rgba(0, 243, 255, 0.1);
+            border: 3px solid var(--neon-cyan);
+            border-radius: 12px;
+            overflow: hidden;
+            background: #020205;
+        }
+
+        canvas {
+            display: block;
+            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Glassmorphism Cyberpunk HUD */
+        .hud-overlay {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .hud-panel {
+            background: var(--panel-bg);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            border-radius: 6px;
+            padding: 8px 16px;
+            box-shadow: var(--border-glow);
+            pointer-events: auto;
+            backdrop-filter: blur(8px);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hud-panel span {
+            color: var(--neon-cyan);
+            font-weight: bold;
+        }
+
+        .hud-right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .audio-toggle {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .audio-toggle:hover {
+            color: var(--neon-pink);
+            border-color: var(--neon-pink);
+            box-shadow: var(--pink-glow);
+        }
+
+        /* Level select/indicators */
+        .level-indicators {
+            display: flex;
+            gap: 6px;
+        }
+
+        .level-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 1px solid var(--neon-cyan);
+            background: transparent;
+            transition: all 0.3s;
+        }
+
+        .level-dot.active {
+            background: var(--neon-cyan);
+            box-shadow: 0 0 8px var(--neon-cyan);
+        }
+
+        .level-dot.completed {
+            background: var(--neon-green);
+            border-color: var(--neon-green);
+            box-shadow: 0 0 8px var(--neon-green);
+        }
+
+        /* Modern Cyberpunk Modals with Scanline effects */
+        .modal {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            width: 75%;
+            max-width: 550px;
+            background: rgba(8, 8, 20, 0.96);
+            border: 2px solid var(--neon-pink);
+            box-shadow: var(--pink-glow), inset 0 0 20px rgba(255, 0, 127, 0.2);
+            padding: 25px;
+            border-radius: 10px;
+            text-align: left;
+            z-index: 10;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.open {
+            display: block;
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        /* Glitch scanline on modals */
+        .modal::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 11;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 0, 127, 0.3);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .modal-header h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-pink);
+            margin: 0;
+            font-size: 1.4rem;
+            text-shadow: 0 0 8px var(--neon-pink);
+            letter-spacing: 1px;
+        }
+
+        .modal-badge {
+            background: rgba(255, 0, 127, 0.15);
+            border: 1px solid var(--neon-pink);
+            color: var(--neon-pink);
+            padding: 3px 8px;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .modal-content {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #d1d1f0;
+            max-height: 220px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        /* Scrollbar styles for modal */
+        .modal-content::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: var(--neon-pink);
+            border-radius: 2px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            padding: 8px 18px;
+            font-weight: bold;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-radius: 4px;
+            text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+            box-shadow: 0 0 5px rgba(0, 243, 255, 0.1);
+            transition: all 0.2s;
+        }
+
+        .close-btn:hover {
+            background: var(--neon-cyan);
+            color: #000;
+            box-shadow: var(--border-glow);
+            text-shadow: none;
+        }
+
+        .close-btn.accent {
+            border-color: var(--neon-pink);
+            color: var(--neon-pink);
+            text-shadow: 0 0 5px rgba(255, 0, 127, 0.5);
+        }
+
+        .close-btn.accent:hover {
+            background: var(--neon-pink);
+            color: #fff;
+            box-shadow: var(--pink-glow);
+            text-shadow: none;
+        }
+
+        /* Cyberpunk Glitch & Static Effects */
+        @keyframes glitch {
+            0% {
+                text-shadow: 0 0 5px #fff, 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
+            }
+
+            50% {
+                text-shadow: 0 0 5px #fff, 0 0 8px var(--neon-pink), 0 0 15px var(--neon-pink);
+            }
+
+            100% {
+                text-shadow: 0 0 5px #fff, 0 0 12px var(--neon-cyan), 0 0 25px var(--neon-cyan);
+            }
+        }
+
+        .controls-hint {
+            margin-top: 15px;
+            color: #555870;
+            font-size: 0.85rem;
+            text-align: center;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .controls-hint span {
+            color: rgba(0, 243, 255, 0.7);
+        }
+
+        /* Screen Glitch Overlay */
+        .glitch-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 0, 127, 0.1);
+            opacity: 0;
+            z-index: 8;
+            pointer-events: none;
+            transition: opacity 0.15s;
+        }
+
+        .glitch-active .glitch-screen {
+            opacity: 1;
+            animation: screenGlitch 0.3s steps(2) infinite;
+        }
+
+        @keyframes screenGlitch {
+            0% {
+                transform: translate(2px, 1px) skewX(2deg);
+                background: rgba(0, 243, 255, 0.15);
+            }
+
+            50% {
+                transform: translate(-1px, -2px) skewX(-2deg);
+                background: rgba(255, 0, 127, 0.15);
+            }
+
+            100% {
+                transform: translate(0, 0);
+                background: transparent;
+            }
+        }
+
+        /* Start / Level Win Screens */
+        .overlay-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(3, 3, 10, 0.92);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9;
+            transition: opacity 0.5s;
+        }
+
+        .overlay-screen h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-cyan);
+            font-size: 2.5rem;
+            margin: 0 0 10px 0;
+            text-shadow: 0 0 15px var(--neon-cyan);
+            letter-spacing: 3px;
+        }
+
+        .overlay-screen p {
+            color: #a0a0c0;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            text-align: center;
+            max-width: 500px;
+            line-height: 1.6;
+        }
+
+        .start-btn {
+            background: transparent;
+            border: 2px solid var(--neon-pink);
+            color: var(--neon-pink);
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(255, 0, 127, 0.2);
+            transition: all 0.3s;
+            letter-spacing: 2px;
+        }
+
+        .start-btn:hover {
+            background: var(--neon-pink);
+            color: #fff;
+            box-shadow: var(--pink-glow);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>ATREY.EXE</h1>
+        <p class="subtitle">The Machine Learning Journey // Platformer v2.0</p>
+    </div>
+
+    <div id="game-container">
+        <!-- Main Game HUD Overlay -->
+        <div class="hud-overlay">
+            <div class="hud-panel">
+                <span>LVL:</span>
+                <div id="hud-level-name">1 // THE ORIGIN</div>
+            </div>
+            <div class="hud-right">
+                <div class="hud-panel">
+                    <span>NODES:</span>
+                    <div id="hud-nodes-count">0 / 0</div>
+                </div>
+                <div class="hud-panel audio-toggle" onclick="toggleAudio()" id="hud-audio-btn">
+                    <span>SFX:</span> OFF
+                </div>
+                <div class="hud-panel">
+                    <div class="level-indicators">
+                        <div class="level-dot active" id="dot-1"></div>
+                        <div class="level-dot" id="dot-2"></div>
+                        <div class="level-dot" id="dot-3"></div>
+                        <div class="level-dot" id="dot-4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Canvas -->
+        <canvas id="gameCanvas" width="800" height="450"></canvas>
+
+        <!-- Glitch effect screen -->
+        <div id="glitch-overlay" class="glitch-screen"></div>
+
+        <!-- Level Win / Terminal / Start Screens -->
+        <div id="start-screen" class="overlay-screen">
+            <h2>INITIALIZING...</h2>
+            <p>Welcome to Atrey's Interactive ML Journey. Take control of atrey.exe, collect secure profile data nodes,
+                and navigate the tech stacks across 4 neon cyber levels.</p>
+            <button class="start-btn" onclick="startGame()">RUN_SYSTEM.SH</button>
+        </div>
+
+        <div id="complete-screen" class="overlay-screen" style="display: none;">
+            <h2>SYSTEM COMPLETED</h2>
+            <p>Congratulations, Agent! You have successfully compiled the full profile packet for Atrey. All levels
+                loaded, database synced.</p>
+            <button class="start-btn" onclick="resetGame()"
+                style="border-color: var(--neon-green); color: var(--neon-green); box-shadow: 0 0 10px rgba(57, 255, 20, 0.2);">RESTART_SYSTEM</button>
+        </div>
+
+        <!-- Interactive Data Node Modal -->
+        <div id="node-modal" class="modal">
+            <div class="modal-header">
+                <h2 id="modal-title">DATA NODE UNLOCKED</h2>
+                <div class="modal-badge" id="modal-type-badge">ENCRYPTED</div>
+            </div>
+            <div class="modal-content">
+                <p id="modal-text">Loading secure profile packet...</p>
+            </div>
+            <div class="modal-footer">
+                <button class="close-btn accent" onclick="closeModal()">RESUME_SYSTEM</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls-hint">
+        <div><span>[A / D]</span> or <span>[← / →]</span> to Move</div>
+        <div><span>[W / SPACE]</span> to Jump</div>
+        <div><span>[S / ↓]</span> to Enter Terminals / Elevators</div>
+    </div>
+
+    <script>
+        // Game State & Canvas Configuration
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const startScreen = document.getElementById('start-screen');
+        const completeScreen = document.getElementById('complete-screen');
+        const glitchOverlay = document.getElementById('glitch-overlay');
+        const modal = document.getElementById('node-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalText = document.getElementById('modal-text');
+        const modalBadge = document.getElementById('modal-type-badge');
+        const hudLevelName = document.getElementById('hud-level-name');
+        const hudNodesCount = document.getElementById('hud-nodes-count');
+        const hudAudioBtn = document.getElementById('hud-audio-btn');
+
+        let isPaused = false;
+        let isStarted = false;
+        let currentLevel = 1;
+        let cameraX = 0;
+        let soundEnabled = false;
+        let audioCtx = null;
+        let particles = [];
+        let animFrameId = null;
+
+        // Physics Config
+        const config = {
+            gravity: 0.5,
+            friction: 0.82,
+            canvasWidth: 800,
+            canvasHeight: 450,
+            levelWidth: 2000
+        };
+
+        // Player Object
+        const player = {
+            x: 80,
+            y: 300,
+            width: 26,
+            height: 36,
+            vx: 0,
+            vy: 0,
+            speed: 4.8,
+            jumpForce: 10.5,
+            grounded: false,
+            color: '#00f3ff',
+            facingRight: true,
+            animationTimer: 0,
+            isJumping: false,
+            trail: []
+        };
+
+        // SOUND SYNTHESIS SYSTEM (Web Audio API)
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            initAudio();
+
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+
+                if (type === 'jump') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(150, now);
+                    osc.frequency.exponentialRampToValueAtTime(600, now + 0.15);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.15);
+                    osc.start(now);
+                    osc.stop(now + 0.15);
+                } else if (type === 'pickup') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.setValueAtTime(880, now + 0.08);
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                } else if (type === 'win') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(300, now);
+                    osc.frequency.setValueAtTime(400, now + 0.1);
+                    osc.frequency.setValueAtTime(500, now + 0.2);
+                    osc.frequency.setValueAtTime(800, now + 0.3);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.5);
+                    osc.start(now);
+                    osc.stop(now + 0.5);
+                } else if (type === 'glitch') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(100 + Math.random() * 200, now);
+                    osc.frequency.linearRampToValueAtTime(50, now + 0.2);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                } else if (type === 'bounce') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(200, now);
+                    osc.frequency.exponentialRampToValueAtTime(100, now + 0.1);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.1);
+                    osc.start(now);
+                    osc.stop(now + 0.1);
+                }
+            } catch (e) {
+                console.warn("Audio Context failed: ", e);
+            }
+        }
+
+        function toggleAudio() {
+            soundEnabled = !soundEnabled;
+            hudAudioBtn.innerHTML = `<span>SFX:</span> ${soundEnabled ? 'ON' : 'OFF'}`;
+            hudAudioBtn.style.borderColor = soundEnabled ? 'var(--neon-green)' : 'rgba(0, 243, 255, 0.3)';
+            hudAudioBtn.style.boxShadow = soundEnabled ? '0 0 10px rgba(57, 255, 20, 0.3)' : 'var(--border-glow)';
+            if (soundEnabled) {
+                initAudio();
+                playSound('pickup');
+            }
+        }
+
+        // LEVEL DATA AND MAPS
+        const levelData = {
+            1: {
+                name: "1 // THE ORIGIN",
+                badge: "EDUCATION & IDENTITY",
+                platforms: [
+                    // Ground elements
+                    { x: 0, y: 400, width: 650, height: 50, type: 'floor' },
+                    { x: 750, y: 400, width: 500, height: 50, type: 'floor' },
+                    { x: 1350, y: 400, width: 650, height: 50, type: 'floor' },
+
+                    // Level structures
+                    { x: 220, y: 280, width: 120, height: 20, type: 'platform' },
+                    { x: 450, y: 220, width: 140, height: 20, type: 'platform' },
+                    { x: 800, y: 300, width: 100, height: 20, type: 'platform' },
+                    { x: 960, y: 220, width: 120, height: 20, type: 'platform' },
+                    { x: 1120, y: 140, width: 100, height: 20, type: 'platform' },
+                    { x: 1400, y: 290, width: 180, height: 20, type: 'platform' }
+                ],
+                elements: [
+                    {
+                        x: 270, y: 180, width: 40, height: 40,
+                        type: 'node',
+                        triggered: false,
+                        title: "ATREY PROFILE CORE",
+                        text: "Aspiring Machine Learning Engineer, mathematical modeller, and developer of intelligent systems. I blend rigorous mathematical foundation with modern deep learning codebases."
+                    },
+                    {
+                        x: 600, y: 280, width: 130, height: 120,
+                        type: 'sign',
+                        title: "CHANDIGARH UNIVERSITY",
+                        text: "Class of 2028 // BE in Computer Science & Engineering. Consistently mastering core computing, advanced matrices, algorithm analysis, and database paradigms."
+                    },
+                    {
+                        x: 1000, y: 120, width: 40, height: 40,
+                        type: 'node',
+                        triggered: false,
+                        title: "MATHEMATICAL FOUNDATION",
+                        text: "Experienced in linear algebra, statistics, calculus, and stochastic processes. Believes that elegant code begins with solid equations."
+                    },
+                    {
+                        x: 1480, y: 190, width: 40, height: 40,
+                        type: 'node',
+                        triggered: false,
+                        title: "RESEARCH ORIENTATION",
+                        text: "Passionate about research papers, neural network architectures, optimization theory, and exploring scalable artificial intelligence methodologies."
+                    }
+                ],
+                portal: { x: 1850, y: 310, width: 60, height: 90 }
+            },
+            2: {
+                name: "2 // THE JOURNEY",
+                badge: "WORK EXPERIENCE",
+                platforms: [
+                    { x: 0, y: 400, width: 450, height: 50, type: 'floor' },
+                    { x: 550, y: 400, width: 550, height: 50, type: 'floor' },
+                    { x: 1200, y: 400, width: 800, height: 50, type: 'floor' },
+
+                    // Interactive level modules
+                    { x: 200, y: 290, width: 150, height: 20, type: 'platform' },
+                    { x: 400, y: 190, width: 120, height: 20, type: 'platform' },
+
+                    // Hazards (floating data spikes)
+                    { x: 550, y: 320, width: 100, height: 15, type: 'obstacle', detail: 'Spike Block' },
+                    { x: 750, y: 290, width: 120, height: 20, type: 'platform' },
+                    { x: 950, y: 200, width: 140, height: 20, type: 'platform' },
+
+                    // High path
+                    { x: 1300, y: 300, width: 160, height: 20, type: 'platform' },
+                    { x: 1500, y: 210, width: 160, height: 20, type: 'platform' }
+                ],
+                elements: [
+                    {
+                        x: 260, y: 190, width: 40, height: 40,
+                        type: 'node',
+                        triggered: false,
+                        title: "VISHESH ENTERPRISES - FINANCIAL OPTIMIZATION",
+                        text: "Role: ML Developer Intern. Designed and engineered automated ledger auditing and inventory analysis models using local transformers and linear programming."
+                    },
+                    {
+                        x: 800, y: 190, width: 40, height: 40,
+                        type: 'node',
+                        triggered: false,
+                        title: "EXPENSE REDUCTION METRICS",
+                        text: "Developed a predictive inventory optimization pipeline that identified redundant supply chains and wastage patterns, successfully leading to a 14% reduction in overall operating costs."
+                    },
+                    {
+                        x: 1000, y: 100, width: 40, height: 40,
+                        type: 'node',
+                        triggered: false,
+                        title: "DATA INTEGRITY CORRELATION",
+                        text: "Implemented custom OCR parsers matched with fuzzy matching algorithms to validate paper invoices against digitized enterprise databases, reducing audit times from days to minutes."
+                    },
+                    {
+                        x: 1560, y: 110, width: 40, height: 40,
+                        type: 'node',
+                        triggered: false,
+                        title: "ENTERPRISE DEPLOYMENT",
+                        text: "Containerized analytics microservices using Docker and integrated them with local relational data backends, maintaining strict data privacy constraints."
+                    }
+                ],
+                portal: { x: 1880, y: 310, width: 60, height: 90 }
+            },
+            3: {
+                name: "3 // THE ARCHITECT",
+                badge: "PROJECT PORTFOLIO",
+                platforms: [
+                    { x: 0, y: 400, width: 700, height: 50, type: 'floor' },
+                    { x: 800, y: 400, width: 400, height: 50, type: 'floor' },
+                    { x: 1300, y: 400, width: 700, height: 50, type: 'floor' },
+
+                    // Layout
+                    { x: 180, y: 300, width: 140, height: 20, type: 'platform' },
+                    { x: 380, y: 210, width: 150, height: 20, type: 'platform' },
+                    { x: 600, y: 130, width: 120, height: 20, type: 'platform' },
+
+                    // Terminal base
+                    { x: 850, y: 280, width: 140, height: 120, type: 'terminal_base' },
+                    { x: 1100, y: 220, width: 120, height: 20, type: 'platform' },
+                    { x: 1400, y: 300, width: 160, height: 20, type: 'platform' },
+                    { x: 1600, y: 200, width: 160, height: 20, type: 'platform' }
+                ],
+                elements: [
+                    {
+                        x: 230, y: 200, width: 40, height: 40,
+                        type: 'node',
+                        triggered: false,
+                        title: "MANGA SKETCHER AI",
+                        text: "An advanced sketch-to-color pipeline. Developed custom Generative Adversarial Networks (GANs) and diffusion-based color-hint systems to colorize line arts, optimized for localized web interface engines."
+                    },
+                    {
+                        x: 450, y: 110, width: 40, height: 40,
+                        type: 'node',
+                        triggered: false,
+                        title: "PUTER.JS INTEGRATION",
+                        text: "Refactored processing scripts to run on client-side sandboxes utilizing Puter's node services, removing backend computation blockages and providing unlimited, instant client inference."
+                    },
+                    {
+                        x: 900, y: 220, width: 40, height: 60,
+                        type: 'terminal',
+                        title: "TERMINAL CONSOLE [MANGA-SKETCHER]",
+                        text: "PRESS DOWN ARROW TO DECRYPT PROJECT CODE...\n\nInitializing core systems...\nLoading GAN models [Success]\nRunning Puter.js micro-framework [Success]\nMemory Leaks: 0%\nInference Latency: 42ms\n[COMPILATION: SECURE]"
+                    },
+                    {
+                        x: 1460, y: 200, width: 40, height: 40,
+                        type: 'node',
+                        triggered: false,
+                        title: "NUMEROLOGY ENGINE",
+                        text: "A modular calculations engine combining astrological paradigms with mathematical matrices. Features customizable charts, responsive grid layouts, and user profile databases."
+                    }
+                ],
+                portal: { x: 1850, y: 310, width: 60, height: 90 }
+            },
+            4: {
+                name: "4 // THE SINGULARITY",
+                badge: "CORE SKILLS & ACCESS",
+                platforms: [
+                    { x: 0, y: 400, width: 2000, height: 50, type: 'floor' },
+
+                    // Skill platforms
+                    { x: 200, y: 300, width: 140, height: 20, type: 'platform' },
+                    { x: 400, y: 220, width: 140, height: 20, type: 'platform' },
+                    { x: 600, y: 140, width: 140, height: 20, type: 'platform' },
+
+                    // Mid structures
+                    { x: 900, y: 260, width: 220, height: 20, type: 'platform' },
+                    { x: 1250, y: 180, width: 180, height: 20, type: 'platform' },
+                    { x: 1550, y: 280, width: 180, height: 20, type: 'platform' }
+                ],
+                elements: [
+                    {
+                        x: 250, y: 200, width: 40, height: 40,
+                        type: 'node',
+                        triggered: false,
+                        title: "MACHINE LEARNING TOOLSET",
+                        text: "PyTorch, TensorFlow, Scikit-learn, HuggingFace Transformers, OpenCV. Well-versed in implementing CNNs, ResNets, GANs, LSTMs, and custom encoder-decoder models."
+                    },
+                    {
+                        x: 450, y: 120, width: 40, height: 40,
+                        type: 'node',
+                        triggered: false,
+                        title: "DEVELOPMENT & SYSTEMS",
+                        text: "Languages: Python, C++, Javascript, SQL. Tools: Docker, Git, Linux environments, Web Audio, HTML5 Canvas API, Node.js."
+                    },
+                    {
+                        x: 1000, y: 160, width: 40, height: 40,
+                        type: 'node',
+                        triggered: false,
+                        title: "MATHEMATICAL MODELLING",
+                        text: "Mathematical optimization, numerical computations, gradient descent derivatives, Markov chains, probabilistic networks, and financial ledger data architectures."
+                    },
+                    {
+                        x: 1320, y: 80, width: 40, height: 40,
+                        type: 'node',
+                        triggered: false,
+                        title: "AGENTIC CAPABILITIES",
+                        text: "Actively building autonomous workflows, embedding search systems, local tool agents, and server-side data analytics engines."
+                    },
+                    {
+                        x: 1620, y: 180, width: 40, height: 40,
+                        type: 'node',
+                        triggered: false,
+                        title: "TRANSMISSION: CONTACT INFO",
+                        text: "Location: Chandigarh, India. Project Repository: GitHub @Atrey. Open to research collaborations, developer roles, and ML architecture engineering positions."
+                    }
+                ],
+                portal: { x: 1880, y: 310, width: 60, height: 90 }
+            }
+        };
+
+        // ACTIVE LEVEL STATE
+        let currentLevelData = JSON.parse(JSON.stringify(levelData[currentLevel]));
+
+        // INPUTS HANDLER
+        const keys = {};
+        window.addEventListener('keydown', e => {
+            if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "KeyW", "KeyS", "KeyA", "KeyD"].includes(e.code)) {
+                e.preventDefault();
+            }
+            keys[e.code] = true;
+        });
+        window.addEventListener('keyup', e => {
+            keys[e.code] = false;
+        });
+
+        function checkCollision(rect1, rect2) {
+            return rect1.x < rect2.x + rect2.width &&
+                rect1.x + rect1.width > rect2.x &&
+                rect1.y < rect2.y + rect2.height &&
+                rect1.y + rect1.height > rect2.y;
+        }
+
+        // Particle System
+        class Particle {
+            constructor(x, y, color, speedX, speedY, size, life) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.speedX = speedX;
+                this.speedY = speedY;
+                this.size = size;
+                this.maxLife = life;
+                this.life = life;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.life--;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.shadowColor = this.color;
+                ctx.shadowBlur = 8;
+                ctx.beginPath();
+                ctx.arc(this.x - cameraX, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0; // reset
+            }
+        }
+
+        function createExplosion(x, y, color, count = 12) {
+            for (let i = 0; i < count; i++) {
+                const speedX = (Math.random() - 0.5) * 5;
+                const speedY = (Math.random() - 0.5) * 5 - 1;
+                const size = Math.random() * 3 + 1;
+                const life = Math.random() * 20 + 15;
+                particles.push(new Particle(x, y, color, speedX, speedY, size, life));
+            }
+        }
+
+        // GUI Actions
+        function launchModal(title, text, badgeText = "ENCRYPTED") {
+            isPaused = true;
+            modalTitle.innerText = title;
+            modalText.innerHTML = text.replace(/\n/g, "<br>");
+            modalBadge.innerText = badgeText;
+            modal.classList.add('open');
+        }
+
+        function closeModal() {
+            modal.classList.remove('open');
+            setTimeout(() => {
+                isPaused = false;
+                // Tiny boost away to prevent immediate re-trigger
+                player.vx = player.facingRight ? -2 : 2;
+                player.y -= 2;
+                gameLoop();
+            }, 200);
+        }
+
+        function triggerGlitchEffect() {
+            playSound('glitch');
+            document.body.classList.add('glitch-active');
+            setTimeout(() => {
+                document.body.classList.remove('glitch-active');
+            }, 300);
+        }
+
+        function changeLevel(newLevel) {
+            if (newLevel > 4) {
+                // Game fully complete
+                cancelAnimationFrame(animFrameId);
+                completeScreen.style.display = 'flex';
+                playSound('win');
+                return;
+            }
+
+            currentLevel = newLevel;
+            currentLevelData = JSON.parse(JSON.stringify(levelData[currentLevel]));
+
+            // Reset player position for new level
+            player.x = 80;
+            player.y = 300;
+            player.vx = 0;
+            player.vy = 0;
+            cameraX = 0;
+            particles = [];
+
+            // Update HUD indicator classes
+            for (let i = 1; i <= 4; i++) {
+                const dot = document.getElementById(`dot-${i}`);
+                dot.className = 'level-dot';
+                if (i < currentLevel) dot.classList.add('completed');
+                if (i === currentLevel) dot.classList.add('active');
+            }
+
+            hudLevelName.innerText = currentLevelData.name;
+            updateNodesHUD();
+            triggerGlitchEffect();
+        }
+
+        function updateNodesHUD() {
+            const totalNodes = currentLevelData.elements.filter(e => e.type === 'node' || e.type === 'terminal').length;
+            const activeNodes = currentLevelData.elements.filter(e => (e.type === 'node' || e.type === 'terminal') && e.triggered).length;
+            hudNodesCount.innerText = `${activeNodes} / ${totalNodes}`;
+        }
+
+        // MAIN PHYSICS AND LOGIC
+        function update() {
+            if (isPaused || !isStarted) return;
+
+            // Movement mechanics
+            if (keys['ArrowRight'] || keys['KeyD']) {
+                if (player.vx < player.speed) player.vx += 0.5;
+                player.facingRight = true;
+            }
+            if (keys['ArrowLeft'] || keys['KeyA']) {
+                if (player.vx > -player.speed) player.vx -= 0.5;
+                player.facingRight = false;
+            }
+            if ((keys['Space'] || keys['ArrowUp'] || keys['KeyW']) && player.grounded) {
+                player.vy = -player.jumpForce;
+                player.grounded = false;
+                player.isJumping = true;
+                playSound('jump');
+                // Jump dust particles
+                createExplosion(player.x + player.width / 2, player.y + player.height, 'rgba(0, 243, 255, 0.4)', 6);
+            }
+
+            // Apply friction and gravity
+            player.vx *= config.friction;
+            player.vy += config.gravity;
+            player.grounded = false;
+
+            // Platform Collisions
+            currentLevelData.platforms.forEach(platform => {
+                if (checkCollision(player, platform)) {
+                    // Handle bottom platform collision (landing)
+                    if (player.vy > 0 && (player.y + player.height - player.vy) <= platform.y + 4) {
+                        player.y = platform.y - player.height;
+                        player.vy = 0;
+                        player.grounded = true;
+                        if (player.isJumping) {
+                            player.isJumping = false;
+                            // Landing dust
+                            createExplosion(player.x + player.width / 2, player.y + player.height, 'rgba(0, 243, 255, 0.2)', 5);
+                        }
+                    }
+                    // Handle side collisions
+                    else if (player.vx > 0 && player.x + player.width - player.vx <= platform.x + 3) {
+                        player.x = platform.x - player.width;
+                        player.vx = 0;
+                    }
+                    else if (player.vx < 0 && player.x - player.vx >= platform.x + platform.width - 3) {
+                        player.x = platform.x + platform.width;
+                        player.vx = 0;
+                    }
+                    // Handle top collision (head bump)
+                    else if (player.vy < 0 && player.y - player.vy >= platform.y + platform.height - 4) {
+                        player.y = platform.y + platform.height;
+                        player.vy = 0.5;
+                        playSound('bounce');
+                    }
+                }
+            });
+
+            // Elements Collision (Nodes, Signs, Terminals)
+            currentLevelData.elements.forEach(elem => {
+                if (checkCollision(player, elem)) {
+                    if (elem.type === 'node' && !elem.triggered) {
+                        // Mario bump check: hit from below
+                        if (player.vy < 0 && (player.y - player.vy) >= elem.y + elem.height - 5) {
+                            player.vy = 1.5;
+                            elem.triggered = true;
+                            playSound('pickup');
+                            createExplosion(elem.x + elem.width / 2, elem.y + elem.height / 2, 'var(--neon-pink)', 15);
+                            updateNodesHUD();
+                            launchModal(elem.title, elem.text, currentLevelData.badge);
+                        }
+                    }
+                    else if (elem.type === 'sign') {
+                        // Near sign collision
+                        launchModal(elem.title, elem.text, "EDUCATION");
+                        // Bounce back player to not clip inside
+                        player.x -= player.facingRight ? 18 : -18;
+                        player.vx = 0;
+                    }
+                    else if (elem.type === 'terminal') {
+                        // Interactive terminal overlay
+                        if (keys['ArrowDown'] || keys['KeyS']) {
+                            elem.triggered = true;
+                            playSound('win');
+                            updateNodesHUD();
+                            launchModal(elem.title, elem.text, "DEC STATE CONSOLE");
+                            player.y -= 10;
+                        }
+                    }
+                }
+            });
+
+            // Level End Portal Collision
+            const portal = currentLevelData.portal;
+            if (checkCollision(player, portal)) {
+                // Check if all data nodes collected first
+                const totalNodes = currentLevelData.elements.filter(e => e.type === 'node' || e.type === 'terminal').length;
+                const activeNodes = currentLevelData.elements.filter(e => (e.type === 'node' || e.type === 'terminal') && e.triggered).length;
+
+                if (activeNodes >= totalNodes) {
+                    playSound('win');
+                    createExplosion(portal.x + portal.width / 2, portal.y + portal.height / 2, 'var(--neon-green)', 25);
+                    changeLevel(currentLevel + 1);
+                } else {
+                    // Hint to gather nodes
+                    launchModal("PORTAL SECURE ERROR", "System access denied. Please harvest all remaining [?] DATA NODES in this layer before compiling the portal core.", "ACCESS DENIED");
+                    player.x -= 30; // knockback
+                }
+            }
+
+            // Apply movement speeds
+            player.x += player.vx;
+            player.y += player.vy;
+
+            // Boundary constraints
+            if (player.x < 0) player.x = 0;
+            if (player.x > config.levelWidth - player.width) player.x = config.levelWidth - player.width;
+
+            // Void drop death check
+            if (player.y > config.canvasHeight + 100) {
+                triggerGlitchEffect();
+                player.x = 80;
+                player.y = 150;
+                player.vx = 0;
+                player.vy = 0;
+            }
+
+            // Smooth Camera Follow
+            const targetCameraX = player.x - config.canvasWidth / 3;
+            cameraX += (targetCameraX - cameraX) * 0.08;
+            cameraX = Math.max(0, Math.min(cameraX, config.levelWidth - config.canvasWidth));
+
+            // Player action animation loop
+            player.animationTimer++;
+            if (Math.abs(player.vx) > 0.2 && player.grounded) {
+                if (player.animationTimer % 5 === 0) {
+                    player.trail.push({ x: player.x, y: player.y, opacity: 0.4 });
+                }
+            }
+
+            // Trail handling
+            player.trail.forEach(t => t.opacity -= 0.02);
+            player.trail = player.trail.filter(t => t.opacity > 0);
+
+            // Update Particles
+            particles.forEach(p => p.update());
+            particles = particles.filter(p => p.life > 0);
+        }
+
+        // RENDERING PIPELINE
+        function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 1. DRAW PARALLAX BACKGROUND
+            // Layer 1: Moving grid base
+            ctx.strokeStyle = 'rgba(0, 243, 255, 0.04)';
+            ctx.lineWidth = 1;
+            const gridOffset = -(cameraX * 0.4) % 60;
+            for (let x = gridOffset; x < canvas.width; x += 60) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += 40) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+            }
+
+            // Layer 2: Neon stars in background
+            ctx.fillStyle = '#fff';
+            for (let i = 0; i < 40; i++) {
+                const starX = (i * 97 + cameraX * -0.1) % canvas.width;
+                const starY = (i * 23) % (canvas.height - 120);
+                const opacity = (Math.sin(player.animationTimer * 0.02 + i) * 0.4) + 0.6;
+                ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+                ctx.fillRect(starX, starY, 1.5, 1.5);
+            }
+
+            // Layer 3: Cyberpunk City Skylines (Programmatic drawing)
+            ctx.fillStyle = '#0a0a1f';
+            const cityOffset = -(cameraX * 0.15) % 300;
+            for (let i = -1; i < 4; i++) {
+                const xPos = cityOffset + i * 300;
+                ctx.fillStyle = 'rgba(12, 10, 28, 0.6)';
+                ctx.fillRect(xPos, 180, 70, 220);
+                ctx.fillRect(xPos + 50, 220, 90, 180);
+                ctx.fillRect(xPos + 120, 150, 80, 250);
+                ctx.fillRect(xPos + 220, 240, 60, 160);
+
+                // Window dots in buildings
+                ctx.fillStyle = 'rgba(0, 243, 255, 0.3)';
+                ctx.fillRect(xPos + 20, 210, 4, 4);
+                ctx.fillRect(xPos + 20, 230, 4, 4);
+                ctx.fillRect(xPos + 140, 190, 4, 4);
+                ctx.fillRect(xPos + 140, 220, 4, 4);
+                ctx.fillRect(xPos + 160, 220, 4, 4);
+            }
+
+            // 2. DRAW GROUND AND PLATFORMS
+            currentLevelData.platforms.forEach(p => {
+                if (p.type === 'floor') {
+                    ctx.fillStyle = '#0d0d1e';
+                    ctx.fillRect(p.x - cameraX, p.y, p.width, p.height);
+                    // Neon border line
+                    ctx.strokeStyle = 'var(--neon-cyan)';
+                    ctx.shadowColor = 'var(--neon-cyan)';
+                    ctx.shadowBlur = 8;
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.moveTo(p.x - cameraX, p.y);
+                    ctx.lineTo(p.x + p.width - cameraX, p.y);
+                    ctx.stroke();
+                    ctx.shadowBlur = 0; // reset
+                }
+                else if (p.type === 'platform') {
+                    ctx.fillStyle = 'rgba(15, 15, 35, 0.9)';
+                    ctx.fillRect(p.x - cameraX, p.y, p.width, p.height);
+                    ctx.strokeStyle = 'var(--neon-purple)';
+                    ctx.shadowColor = 'var(--neon-purple)';
+                    ctx.shadowBlur = 6;
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(p.x - cameraX, p.y, p.width, p.height);
+                    ctx.shadowBlur = 0; // reset
+                }
+                else if (p.type === 'obstacle') {
+                    // Neon Spikes
+                    ctx.fillStyle = 'rgba(255, 0, 127, 0.2)';
+                    ctx.fillRect(p.x - cameraX, p.y, p.width, p.height);
+                    ctx.strokeStyle = 'var(--neon-pink)';
+                    ctx.shadowColor = 'var(--neon-pink)';
+                    ctx.shadowBlur = 8;
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(p.x - cameraX, p.y, p.width, p.height);
+                    ctx.shadowBlur = 0;
+
+                    // Draw warning label
+                    ctx.fillStyle = 'var(--neon-pink)';
+                    ctx.font = '8px monospace';
+                    ctx.fillText("! HAZARD !", p.x + p.width / 2 - cameraX, p.y + 11);
+                }
+                else if (p.type === 'terminal_base') {
+                    ctx.fillStyle = '#0f111a';
+                    ctx.fillRect(p.x - cameraX, p.y, p.width, p.height);
+                    ctx.strokeStyle = 'var(--neon-cyan)';
+                    ctx.strokeRect(p.x - cameraX, p.y, p.width, p.height);
+                }
+            });
+
+            // 3. DRAW INTERACTIVE DATA NODES & SIGNS
+            currentLevelData.elements.forEach(elem => {
+                if (elem.type === 'node') {
+                    const bounce = Math.sin(player.animationTimer * 0.08) * 4;
+                    ctx.fillStyle = elem.triggered ? '#444' : 'var(--neon-pink)';
+                    ctx.shadowColor = elem.triggered ? 'transparent' : 'var(--neon-pink)';
+                    ctx.shadowBlur = elem.triggered ? 0 : 12;
+
+                    // Draw rotating cube shape
+                    ctx.save();
+                    ctx.translate(elem.x + elem.width / 2 - cameraX, elem.y + elem.height / 2 + bounce);
+                    ctx.rotate(player.animationTimer * 0.03);
+                    ctx.fillRect(-elem.width / 2, -elem.height / 2, elem.width, elem.height);
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(-elem.width / 2, -elem.height / 2, elem.width, elem.height);
+                    ctx.restore();
+                    ctx.shadowBlur = 0;
+
+                    // Info tag above
+                    ctx.fillStyle = elem.triggered ? '#777' : '#fff';
+                    ctx.font = '9px monospace';
+                    ctx.textAlign = 'center';
+                    ctx.fillText("[?] DATA_NODE", elem.x + elem.width / 2 - cameraX, elem.y - 12 + bounce);
+                }
+                else if (elem.type === 'sign') {
+                    ctx.fillStyle = 'rgba(30, 30, 60, 0.4)';
+                    ctx.fillRect(elem.x - cameraX, elem.y, elem.width, elem.height);
+                    ctx.strokeStyle = 'var(--neon-cyan)';
+                    ctx.strokeRect(elem.x - cameraX, elem.y, elem.width, elem.height);
+
+                    // Draw custom holographic sign accents
+                    ctx.fillStyle = '#fff';
+                    ctx.font = '10px monospace';
+                    ctx.textAlign = 'center';
+                    ctx.fillText("CHANDIGARH", elem.x + elem.width / 2 - cameraX, elem.y + 40);
+                    ctx.fillText("UNIVERSITY", elem.x + elem.width / 2 - cameraX, elem.y + 60);
+                    ctx.fillText("[INFO SIGN]", elem.x + elem.width / 2 - cameraX, elem.y - 10);
+
+                    // Hologram lines
+                    ctx.strokeStyle = 'rgba(0, 243, 255, 0.2)';
+                    for (let j = 0; j < elem.height; j += 6) {
+                        ctx.beginPath();
+                        ctx.moveTo(elem.x - cameraX, elem.y + j);
+                        ctx.lineTo(elem.x + elem.width - cameraX, elem.y + j);
+                        ctx.stroke();
+                    }
+                }
+                else if (elem.type === 'terminal') {
+                    // Level 3 interactive terminal console
+                    const pulse = (Math.sin(player.animationTimer * 0.1) * 0.2) + 0.8;
+                    ctx.fillStyle = 'rgba(0, 243, 255, 0.2)';
+                    ctx.fillRect(elem.x - cameraX, elem.y, elem.width, elem.height);
+                    ctx.strokeStyle = `rgba(0, 243, 255, ${pulse})`;
+                    ctx.shadowColor = 'var(--neon-cyan)';
+                    ctx.shadowBlur = 10 * pulse;
+                    ctx.strokeRect(elem.x - cameraX, elem.y, elem.width, elem.height);
+                    ctx.shadowBlur = 0;
+
+                    // Console label
+                    ctx.fillStyle = '#fff';
+                    ctx.font = '9px monospace';
+                    ctx.textAlign = 'center';
+                    ctx.fillText("[TERMINAL]", elem.x + elem.width / 2 - cameraX, elem.y - 12);
+                    ctx.fillText("PRESS [S] OR [↓]", elem.x + elem.width / 2 - cameraX, elem.y + elem.height + 15);
+                }
+            });
+
+            // 4. DRAW PORTAL
+            const portal = currentLevelData.portal;
+            const portalGlow = (Math.sin(player.animationTimer * 0.08) * 0.3) + 0.7;
+            ctx.strokeStyle = 'var(--neon-green)';
+            ctx.shadowColor = 'var(--neon-green)';
+            ctx.shadowBlur = 15 * portalGlow;
+            ctx.lineWidth = 3;
+
+            // Draw concentric portal rings
+            ctx.strokeRect(portal.x - cameraX, portal.y, portal.width, portal.height);
+            ctx.strokeStyle = 'rgba(57, 255, 20, 0.5)';
+            ctx.strokeRect(portal.x + 5 - cameraX, portal.y + 5, portal.width - 10, portal.height - 10);
+
+            // Inner swirl lines
+            ctx.fillStyle = 'rgba(57, 255, 20, 0.15)';
+            ctx.fillRect(portal.x - cameraX, portal.y, portal.width, portal.height);
+
+            ctx.fillStyle = '#fff';
+            ctx.font = '10px monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText("COMPILE PORTAL", portal.x + portal.width / 2 - cameraX, portal.y - 15);
+            ctx.shadowBlur = 0; // reset
+
+            // 5. DRAW PLAYER TRAIL
+            player.trail.forEach(t => {
+                ctx.fillStyle = `rgba(0, 243, 255, ${t.opacity})`;
+                ctx.fillRect(t.x - cameraX, t.y, player.width, player.height);
+            });
+
+            // 6. DRAW PLAYER CHARACTER (Cyber-Bot with details)
+            ctx.fillStyle = player.color;
+            ctx.shadowColor = 'var(--neon-cyan)';
+            ctx.shadowBlur = 8;
+            ctx.fillRect(player.x - cameraX, player.y, player.width, player.height);
+            ctx.shadowBlur = 0;
+
+            // Draw dark internal visor
+            ctx.fillStyle = '#050510';
+            if (player.facingRight) {
+                ctx.fillRect(player.x + 13 - cameraX, player.y + 6, 10, 8);
+                ctx.fillStyle = varColor('--neon-pink');
+                ctx.fillRect(player.x + 19 - cameraX, player.y + 8, 3, 3); // Eye
+            } else {
+                ctx.fillRect(player.x + 3 - cameraX, player.y + 6, 10, 8);
+                ctx.fillStyle = varColor('--neon-pink');
+                ctx.fillRect(player.x + 4 - cameraX, player.y + 8, 3, 3); // Eye
+            }
+
+            // Draw little runner legs animations
+            ctx.fillStyle = '#fff';
+            if (Math.abs(player.vx) > 0.2 && player.grounded) {
+                const legWalk = Math.sin(player.animationTimer * 0.3) * 6;
+                ctx.fillRect(player.x + 4 - cameraX, player.y + player.height, 4, 3 + legWalk);
+                ctx.fillRect(player.x + 16 - cameraX, player.y + player.height, 4, 3 - legWalk);
+            } else {
+                ctx.fillRect(player.x + 4 - cameraX, player.y + player.height, 4, 3);
+                ctx.fillRect(player.x + 16 - cameraX, player.y + player.height, 4, 3);
+            }
+
+            // 7. DRAW PARTICLES
+            particles.forEach(p => p.draw());
+        }
+
+        // GAME LOOPS
+        function gameLoop() {
+            update();
+            render();
+            if (!isPaused && isStarted) {
+                animFrameId = requestAnimationFrame(gameLoop);
+            }
+        }
+
+        function startGame() {
+            initAudio();
+            isStarted = true;
+            startScreen.style.display = 'none';
+            changeLevel(1);
+            gameLoop();
+        }
+
+        function resetGame() {
+            completeScreen.style.display = 'none';
+            currentLevel = 1;
+            startGame();
+        }
+
+        // Get stylesheet neon var values
+        function varColor(name) {
+            return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        }
+
+        // Setup initial indicators HUD layout
+        updateNodesHUD();
+    </script>
+</body>
+
+</html>
