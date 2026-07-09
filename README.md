@@ -141,9 +141,7 @@ Level 1 → Level 2 → Level 3 → Level 4
 ```
 Resume/
 ├── 📄 index_final.html      ⭐ Main Game (Self-Contained)
-├── 📖 README.md             Documentation
-├── 📄 index.html            Alternative version
-└── 📄 index_pp.html         Portfolio preview
+└── 📖 README.md             Documentation
 ```
 
 **Single File Magic:** Everything (HTML, CSS, JavaScript) is bundled in one file for easy deployment!
