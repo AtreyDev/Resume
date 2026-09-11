@@ -1,285 +1,123 @@
-# 🎮 Atrey Dev Pandey - Cyberpunk Gamified Resume
-
 <div align="center">
 
-### 🚀 Transform Your Resume into an Interactive Gaming Experience
+# 📻 Atreyify — Spotify-Inspired Portfolio & Resume
 
-An immersive, gamified resume built with modern web technologies. Navigate through neon-lit cyber levels, collect profile data nodes, and unlock the complete professional story in a futuristic platformer adventure.
+**An interactive, music-player-inspired developer portfolio and resume application.**
 
-[🎮 **Play Now** →](https://atredev.github.io/Resume/)  |  [📖 Read Docs](#-how-to-play)  |  [💻 Fork Repo](https://github.com/AtreyDev/Resume)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Atreyify-1ed760?style=for-the-badge&logo=spotify&logoColor=black)](https://atreydev.github.io/Resume/)
+[![Stack](https://img.shields.io/badge/Stack-HTML5%20%7C%20Vanilla%20CSS%20%7C%20Web%20Audio-1ed760?style=for-the-badge)]()
+[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)]()
 
----
+[**🎧 Launch Live Atreyify Experience**](https://atreydev.github.io/Resume/)  |  [**Explore Features**](#-key-features)  |  [**Project Collection**](#-featured-release-projects)
 
-**Status:** ✅ Live & Playable | **v2.0:** Cyberpunk Enhanced  
-**Players:** 🌍 Global | **Rating:** ⭐⭐⭐⭐⭐ Interactive Resume  
+<br/>
+
+```
+ _______________________________________________________________________________
+|  [🎧] Atreyify — AI & Code Studio                                 [ Search ]  |
+|===============================================================================|
+|  [||||] Now Playing: VeriLogic (Document Forensics Pipeline)   01:24 / 03:45 |
+|===============================================================================|
+|  [Verified Artist] Atrey Dev Pandey • 4,820 Monthly Code Plays               |
+|_______________________________________________________________________________|
+```
 
 </div>
 
 ---
 
-## 🌐 Live Demo
+## 🌟 Overview
 
-<div align="center">
-
-### 🎮 **[Play Live Resume Here →](https://atredev.github.io/Resume/)**
-
-[![Cyberpunk Resume](https://img.shields.io/badge/Experience-Interactive%20Platformer-ff007f?style=for-the-badge&logo=gamepad)](https://atredev.github.io/Resume/)
-[![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)]()
-[![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)]()
-[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)]()
-
-**🎯 One-Click Entry:** Open the game and start collecting data nodes!
-
-</div>
+**Atreyify** transforms the traditional developer resume into a dynamic, Spotify-desktop-inspired studio application. Built with zero external framework dependencies using native **HTML5**, **Vanilla CSS**, and the browser's **Web Audio API**, Atreyify features an interactive music player, animated equalizer spectrum visualizer, live tracklist table for career experience, and a 52-week GitHub contribution calendar.
 
 ---
 
-## ✨ Features
+## ⚡ Key Features
 
 | Feature | Description |
 |---------|-------------|
-| 🎮 **Interactive Gameplay** | Navigate through 4 unique cyber levels as a playable character |
-| 🎨 **Cyberpunk Aesthetic** | Stunning neon visuals with glowing effects and retro-futuristic design |
-| 📱 **Fully Responsive** | Seamlessly adapts to desktop, tablet, and mobile devices |
-| ⌨️ **Intuitive Controls** | WASD movement, SPACE jump, E to interact - arcade-style gameplay |
-| 🎯 **Profile Collection** | Gather data nodes to unlock education, skills, and project information |
-| 🔐 **Immersive Modal** | Beautiful popups reveal detailed professional information |
-| ⚡ **Performance Optimized** | Lightning-fast load times with no dependencies |
-| 🎬 **Smooth Animations** | Fluid physics and transitions for engaging gameplay |  
+| 🎧 **Spotify Desktop Aesthetic** | Modern dark-theme (`#09090b`), Spotify-green accent (`#1ed760`), glassmorphism header, and responsive sidebar navigation |
+| 🔊 **Web Audio Synthesizer Engine** | Built-in zero-dependency ambient audio synthesizer using native Web Audio API oscillators |
+| 📊 **Animated Equalizer Spectrum** | Live bouncing visualizer bars (`||||`) synchronized with audio playback states |
+| 🔍 **Real-Time Client-Side Search** | Instant filter search bar across projects, tech stack tags, and career highlights |
+| 🎚️ **Scrubbable Progress & Volume** | Interactive player scrub bar with elapsed/total timers (`01:24 / 03:45`) and volume slider |
+| 🎵 **Tracklist Experience & Education** | Spotify track table format where row numbers (`#1`, `#2`) transform into green `▶` Play icons on hover |
+| 🟩 **GitHub Contribution Heatmap** | Integrated 52-week contribution heatmap styled with Spotify green intensity levels |
+| 📱 **Responsive & Mobile Ready** | Collapsible navigation drawers and responsive player controls for mobile & desktop |
 
 ---
 
-## 🎮 How to Play
+## 🚀 Featured Release Projects
 
-```
-OBJECTIVE: Collect all 4 data nodes across cyber levels
-STATUS: Profile Compilation Progress
-```
+### 🛡️ **VeriLogic** — *Multi-Stage Document Forensics*
+- **Tech Stack:** PyTorch, OpenCV, EasyOCR, Docker
+- **Overview:** Automated document-screening pipeline verifying signature authenticity, OCR text extracted from identity cards, and tamper analysis.
 
-### Getting Started
+### 📅 **STP** — *AI-Driven Virtual Event Platform*
+- **Tech Stack:** React, Node.js, Machine Learning
+- **Overview:** Interactive virtual event architecture featuring pattern recognition models to analyze user engagement and event dynamics.
 
-1. **Click Play** → Start at Level 1: THE ORIGIN
-2. **Move & Jump** → Use `W/A/S/D` keys to navigate
-3. **Collect Nodes** → Press `E` to gather data nodes
-4. **Progress** → Complete all 4 levels
-5. **Compile Profile** → Unlock your complete professional packet
+### 💡 **CLARITI** — *AI Recommendation & Workflow Platform*
+- **Tech Stack:** React, MongoDB, NLP
+- **Overview:** Personalization engine utilizing behavioral analytics and natural language processing to customize workspace workflows.
 
-### Gameplay Loop
-
-```
-Level 1 → Level 2 → Level 3 → Level 4
-   ↓          ↓          ↓          ↓
- Profile  Education  Tech Stack  Projects
-   →    Compile Complete Profile ←
-```
+### 🎨 **Manga-Sketcher-AI** — *Style Transformation Engine*
+- **Tech Stack:** JavaScript, Python, OpenCV
+- **Overview:** Full-stack image-processing web app delivering real-time sketch and manga style transformations.
 
 ---
 
-## 📋 Levels & Content
+## 🎛️ Architecture & Tech Stack
 
-### 🌟 Level 1: THE ORIGIN
-```
-🎯 Profile & Introduction
-━━━━━━━━━━━━━━━━━━━━━━━━━
-→ Personal information
-→ Professional summary
-→ Contact & social links
-```
-
-### 📚 Level 2: THE FOUNDATION  
-```
-🎓 Education & Background
-━━━━━━━━━━━━━━━━━━━━━━━━━
-→ Chandigarh University
-→ Academic achievements
-→ Foundation skills
-```
-
-### ⚙️ Level 3: TECH STACK
-```
-💻 Skills & Technologies
-━━━━━━━━━━━━━━━━━━━━━━━━━
-→ Programming languages
-→ Frameworks & tools
-→ Technical expertise
-```
-
-### 🚀 Level 4: PROJECTS
-```
-🏆 Experience & Work
-━━━━━━━━━━━━━━━━━━━━━━━━━
-→ Notable projects
-→ Professional achievements
-→ Key accomplishments
-```
+- **Structure**: Semantic HTML5 single-page application (`index.html`)
+- **Styling**: Vanilla CSS3 using custom CSS variables, flexbox/grid layouts, and glassmorphism backdrops
+- **Logic**: ES6+ JavaScript for search indexing, audio synthesis, timer state, modal drawers, and DOM interactions
+- **Audio**: Web Audio API (`AudioContext`, `OscillatorNode`, `GainNode`)
 
 ---
 
-## 🛠️ Technologies Used
+## 💻 Quick Start & Local Setup
 
-<div align="center">
-
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
-![Responsive](https://img.shields.io/badge/Responsive-Design-00f3ff?style=flat-square)
-
-</div>
-
-| Technology | Purpose |
-|-----------|---------|
-| **HTML5** | Semantic markup & structure |
-| **CSS3** | Neon styling, animations & responsive design |
-| **Vanilla JavaScript** | Game logic, physics & interactivity |
-| **Google Fonts** | Orbitron & Share Tech Mono typography |
-| **GitHub Pages** | Free hosting & deployment |
-
----
-
-## 📁 File Structure
-
-```
-Resume/
-├── 📄 index_final.html      ⭐ Main Game (Self-Contained)
-└── 📖 README.md             Documentation
-```
-
-**Single File Magic:** Everything (HTML, CSS, JavaScript) is bundled in one file for easy deployment!
-
----
-
-## 🚀 Getting Started
-
-### ⚡ Quick Play (Easiest)
-```bash
-# Just click below to play instantly:
-→ https://atredev.github.io/Resume/
-```
-
-### 💾 Run Locally
-
-**Clone & Play:**
+### 1. Clone Repository
 ```bash
 git clone https://github.com/AtreyDev/Resume.git
 cd Resume
-# Then open index_final.html in your browser
 ```
 
-**With Python Server:**
+### 2. Run Locally
+
+**Option A: Open directly in browser**
 ```bash
-cd Resume
+# Double click index.html or open in Chrome / Edge / Firefox / Safari
+```
+
+**Option B: Serve via Python**
+```bash
 python -m http.server 8000
-# Visit: http://localhost:8000
+# Open http://localhost:8000
 ```
 
-**With Node.js:**
+**Option C: Serve via Node / npx**
 ```bash
-cd Resume
 npx serve
-# Visit: http://localhost:3000
+# Open http://localhost:3000
 ```
 
 ---
 
-## 🎨 Design Highlights
+## 👤 Developer Profile
 
-- **Neon Color Palette**: Cyan (#00f3ff), Pink (#ff007f), Purple (#9d4edd), Green (#39ff14)
-- **Retro-Futuristic Typography**: Orbitron and Share Tech Mono fonts
-- **Glowing Effects**: Neon glow animations and hover effects
-- **Responsive Layout**: Adapts to all screen sizes
-- **Accessibility**: Keyboard-only controls, high contrast
+**Atrey Dev Pandey**  
+*Computer Science Engineering Student @ Chandigarh University ('28)*  
+Focused on Artificial Intelligence, Machine Learning, Computer Vision, and Full-Stack Engineering.
 
----
-
-## 📊 Browser Compatibility
-
-- ✅ Chrome/Chromium (Latest)
-- ✅ Firefox (Latest)
-- ✅ Safari (Latest)
-- ✅ Edge (Latest)
-- ✅ Mobile browsers (iOS Safari, Chrome Mobile)
-
----
-
-## 🎯 Game Controls
-
-| Key | Action |
-|-----|--------|
-| `W` | Move Up / Jump |
-| `A` | Move Left |
-| `S` | Move Down |
-| `D` | Move Right |
-| `SPACE` | Jump |
-| `E` | Interact / Collect Node |
-| `ENTER` | Close Modal |
-
----
-
-## 💡 Pro Tips for Best Experience
-
-| Tip | Benefit |
-|-----|---------|
-| 🖥️ **Full Screen (F11)** | Immersive gameplay experience |
-| 🎧 **Enable Audio** | Ambient cyberpunk atmosphere |
-| 🎯 **Keep Focus** | Better keyboard responsiveness |
-| 📺 **1920x1080+** | Optimal visual quality |
-| 🌙 **Dark Room** | Best neon aesthetic enjoyment |
-
----
-
-## 📧 Contact
-
-<div align="center">
-
-**Atrey Dev Pandey**
-
-[![GitHub](https://img.shields.io/badge/GitHub-AtreyDev-black?style=flat-square&logo=github)](https://github.com/AtreyDev)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Atrey%20Dev-blue?style=flat-square&logo=linkedin)](https://linkedin.com/in/atreydev)
-[![Portfolio](https://img.shields.io/badge/Portfolio-Resume%20Game-00f3ff?style=flat-square)](https://atredev.github.io/Resume/)
-
-</div>
+- 🌐 **Portfolio**: [https://atreydev.github.io/Resume/](https://atreydev.github.io/Resume/)
+- 🐙 **GitHub**: [@AtreyDev](https://github.com/AtreyDev)
+- 💼 **LinkedIn**: [Atrey Dev Pandey](https://www.linkedin.com/in/atrey-dev-pandey)
+- ✉️ **Email**: [atreydevpandey@gmail.com](mailto:atreydevpandey@gmail.com)
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License - feel free to use and modify as you wish.
-
----
-
-## 🙏 Acknowledgments
-
-- Inspired by retro arcade games and cyberpunk aesthetics
-- Built to stand out in the crowd of traditional resumes
-- Designed to showcase both technical skills and creativity
-
----
-
-## 🎯 Project Stats
-
-- ⭐ **4 Interactive Levels** with unique challenges
-- 🎮 **100% Playable** in all modern browsers
-- ⚡ **Zero Dependencies** - Pure HTML/CSS/JavaScript
-- 📱 **Mobile Optimized** - Touch & keyboard support
-- 🚀 **Instant Deploy** - Works anywhere
-
----
-
-<div align="center">
-
-### 🌟 Stand Out From The Crowd 🌟
-
-**This isn't just a resume. It's an experience.**
-
-A perfect blend of **creativity**, **technical skill**, and **professional presentation**.
-
----
-
-### 👾 **[Start Playing Now →](https://atredev.github.io/Resume/)** 👾
-
----
-
-<sub>**Designed & Built by Atrey Dev Pandey** • 2026</sub>  
-<sub>_"Your resume should be as memorable as your work."_</sub>
-
-</div>
+This project is open source and available under the [MIT License](LICENSE).
