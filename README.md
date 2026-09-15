@@ -1,123 +1,55 @@
-<div align="center">
+ # Atreyify
 
-# 📻 Atreyify — Spotify-Inspired Portfolio & Resume
+Atreyify is my interactive developer portfolio. It presents projects, experience, education, and technical interests in a music-player-inspired interface rather than as a conventional resume page.
 
-**An interactive, music-player-inspired developer portfolio and resume application.**
+The site is a single-page frontend built with plain HTML, CSS, and JavaScript. It has no frontend framework or package dependency. The dark layout, project tracklist, search, responsive navigation, audio controls, progress display, and contribution view are all implemented in the browser.
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Atreyify-1ed760?style=for-the-badge&logo=spotify&logoColor=black)](https://atreydev.github.io/Resume/)
-[![Stack](https://img.shields.io/badge/Stack-HTML5%20%7C%20Vanilla%20CSS%20%7C%20Web%20Audio-1ed760?style=for-the-badge)]()
-[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)]()
+## What is included
 
-[**🎧 Launch Live Atreyify Experience**](https://atreydev.github.io/Resume/)  |  [**Explore Features**](#-key-features)  |  [**Project Collection**](#-featured-release-projects)
+- Search across the portfolio content from the header search field.
+- Project and experience sections presented as an interactive tracklist.
+- Browser audio controls powered by the Web Audio API.
+- Animated playback state and equalizer details.
+- Responsive sidebars and player controls for smaller screens.
+- Project summaries covering VeriLogic, STP, CLARITI, and Manga-Sketcher-AI.
 
-<br/>
+## Project structure
 
+```text
+index.html       The portfolio UI and client-side behavior
+main.py          Small WSGI app used by the Vercel adapter
+api/index.py     Vercel Python entry point
+vercel.json      Routes requests to the Python entry point
 ```
- _______________________________________________________________________________
-|  [🎧] Atreyify — AI & Code Studio                                 [ Search ]  |
-|===============================================================================|
-|  [||||] Now Playing: VeriLogic (Document Forensics Pipeline)   01:24 / 03:45 |
-|===============================================================================|
-|  [Verified Artist] Atrey Dev Pandey • 4,820 Monthly Code Plays               |
-|_______________________________________________________________________________|
-```
 
-</div>
+## Run it locally
 
----
+The frontend can be opened directly, but a local server is better for testing browser behavior:
 
-## 🌟 Overview
-
-**Atreyify** transforms the traditional developer resume into a dynamic, Spotify-desktop-inspired studio application. Built with zero external framework dependencies using native **HTML5**, **Vanilla CSS**, and the browser's **Web Audio API**, Atreyify features an interactive music player, animated equalizer spectrum visualizer, live tracklist table for career experience, and a 52-week GitHub contribution calendar.
-
----
-
-## ⚡ Key Features
-
-| Feature | Description |
-|---------|-------------|
-| 🎧 **Spotify Desktop Aesthetic** | Modern dark-theme (`#09090b`), Spotify-green accent (`#1ed760`), glassmorphism header, and responsive sidebar navigation |
-| 🔊 **Web Audio Synthesizer Engine** | Built-in zero-dependency ambient audio synthesizer using native Web Audio API oscillators |
-| 📊 **Animated Equalizer Spectrum** | Live bouncing visualizer bars (`||||`) synchronized with audio playback states |
-| 🔍 **Real-Time Client-Side Search** | Instant filter search bar across projects, tech stack tags, and career highlights |
-| 🎚️ **Scrubbable Progress & Volume** | Interactive player scrub bar with elapsed/total timers (`01:24 / 03:45`) and volume slider |
-| 🎵 **Tracklist Experience & Education** | Spotify track table format where row numbers (`#1`, `#2`) transform into green `▶` Play icons on hover |
-| 🟩 **GitHub Contribution Heatmap** | Integrated 52-week contribution heatmap styled with Spotify green intensity levels |
-| 📱 **Responsive & Mobile Ready** | Collapsible navigation drawers and responsive player controls for mobile & desktop |
-
----
-
-## 🚀 Featured Release Projects
-
-### 🛡️ **VeriLogic** — *Multi-Stage Document Forensics*
-- **Tech Stack:** PyTorch, OpenCV, EasyOCR, Docker
-- **Overview:** Automated document-screening pipeline verifying signature authenticity, OCR text extracted from identity cards, and tamper analysis.
-
-### 📅 **STP** — *AI-Driven Virtual Event Platform*
-- **Tech Stack:** React, Node.js, Machine Learning
-- **Overview:** Interactive virtual event architecture featuring pattern recognition models to analyze user engagement and event dynamics.
-
-### 💡 **CLARITI** — *AI Recommendation & Workflow Platform*
-- **Tech Stack:** React, MongoDB, NLP
-- **Overview:** Personalization engine utilizing behavioral analytics and natural language processing to customize workspace workflows.
-
-### 🎨 **Manga-Sketcher-AI** — *Style Transformation Engine*
-- **Tech Stack:** JavaScript, Python, OpenCV
-- **Overview:** Full-stack image-processing web app delivering real-time sketch and manga style transformations.
-
----
-
-## 🎛️ Architecture & Tech Stack
-
-- **Structure**: Semantic HTML5 single-page application (`index.html`)
-- **Styling**: Vanilla CSS3 using custom CSS variables, flexbox/grid layouts, and glassmorphism backdrops
-- **Logic**: ES6+ JavaScript for search indexing, audio synthesis, timer state, modal drawers, and DOM interactions
-- **Audio**: Web Audio API (`AudioContext`, `OscillatorNode`, `GainNode`)
-
----
-
-## 💻 Quick Start & Local Setup
-
-### 1. Clone Repository
 ```bash
-git clone https://github.com/AtreyDev/Resume.git
-cd Resume
-```
-
-### 2. Run Locally
-
-**Option A: Open directly in browser**
-```bash
-# Double click index.html or open in Chrome / Edge / Firefox / Safari
-```
-
-**Option B: Serve via Python**
-```bash
+git clone https://github.com/AtreyDev/Portfolio.git
+cd Portfolio
 python -m http.server 8000
-# Open http://localhost:8000
 ```
 
-**Option C: Serve via Node / npx**
+Then open `http://localhost:8000`.
+
+## Deploy with Vercel
+
+This repository includes a small Python WSGI adapter so Vercel can serve the existing `index.html` through its Python runtime. From the project directory:
+
 ```bash
-npx serve
-# Open http://localhost:3000
+npm install -g vercel
+vercel
 ```
 
----
+For a production deployment, use `vercel --prod` after linking the project to your Vercel account.
 
-## 👤 Developer Profile
+## About me
 
-**Atrey Dev Pandey**  
-*Computer Science Engineering Student @ Chandigarh University ('28)*  
-Focused on Artificial Intelligence, Machine Learning, Computer Vision, and Full-Stack Engineering.
+I am Atrey Dev Pandey, a Computer Science Engineering student at Chandigarh University. My interests include artificial intelligence, machine learning, computer vision, and full-stack development.
 
-- 🌐 **Portfolio**: [https://atreydev.github.io/Resume/](https://atreydev.github.io/Resume/)
-- 🐙 **GitHub**: [@AtreyDev](https://github.com/AtreyDev)
-- 💼 **LinkedIn**: [Atrey Dev Pandey](https://www.linkedin.com/in/atrey-dev-pandey)
-- ✉️ **Email**: [atreydevpandey@gmail.com](mailto:atreydevpandey@gmail.com)
-
----
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
+- Portfolio: <https://atreydev.github.io/Resume/>
+- GitHub: <https://github.com/AtreyDev>
+- LinkedIn: <https://www.linkedin.com/in/atreydev-pandey>
+- Email: <mailto:atreydevpandey@gmail.com>
